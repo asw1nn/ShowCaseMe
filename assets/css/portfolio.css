@@ -10,7 +10,8 @@
     backdrop-filter: blur(10px);
     z-index: 1000;
     padding: 1em 0;
-    display: none; /* Hidden by default, shows on scroll */
+    display: none;
+    /* Hidden by default, shows on scroll */
 }
 
 #top-nav ul {
@@ -116,25 +117,50 @@
     border-radius: 30px;
     color: #fff;
     text-decoration: none;
-    font-weight: 300;
-    transition: all 0.3s ease;
+    font-weight: 400;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.button:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .button:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 .button.primary {
-    background: #64b5f6;
+    background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
     border-color: #64b5f6;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(100, 181, 246, 0.4);
 }
 
 .button.primary:hover {
-    background: #42a5f5;
+    background: linear-gradient(135deg, #42a5f5 0%, #2196f3 100%);
     border-color: #42a5f5;
+    box-shadow: 0 8px 30px rgba(100, 181, 246, 0.6);
+    transform: translateY(-3px) scale(1.05);
 }
 
 .button.small {

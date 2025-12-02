@@ -1,6 +1,5 @@
 // Portfolio Interactive Features
 
-// Smooth scroll for navigation links
 document.addEventListener('DOMContentLoaded', function() {
     // Smooth scrolling for anchor links
     const links = document.querySelectorAll('a[href^="#"]');
@@ -20,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Show/hide navigation on scroll
+    // Show/hide navigation on scroll with smooth animation
     const topNav = document.getElementById('top-nav');
     let lastScroll = 0;
 
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (currentScroll > 600) {
             topNav.style.display = 'block';
-            topNav.style.animation = 'fadeIn 0.3s ease-in';
+            topNav.style.animation = 'fadeInDown 0.3s ease-in';
         } else {
             topNav.style.display = 'none';
         }
@@ -37,68 +36,94 @@ document.addEventListener('DOMContentLoaded', function() {
         lastScroll = currentScroll;
     });
 
-    // Contact methods - simple click tracking (optional)
-    const contactItems = document.querySelectorAll('.contact-item');
-    contactItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            // Add a subtle animation on click
-            this.style.transition = 'all 0.3s ease';
-        });
-    });
-
-    // Animate elements on scroll
+    // Enhanced Intersection Observer for scroll reveal animations
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver(function(entries) {
+    const fadeInObserver = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('revealed');
+                // Unobserve after revealing to improve performance
+                fadeInObserver.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    // Observe all sections
+    // Observe all sections with scroll-reveal class
     const sections = document.querySelectorAll('.content-section');
     sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(30px)';
-        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(section);
+        section.classList.add('scroll-reveal');
+        fadeInObserver.observe(section);
     });
 
-    // Add animation to skill tags on hover
-    const skillTags = document.querySelectorAll('.skill-tag');
-    skillTags.forEach(tag => {
-        tag.addEventListener('mouseenter', function() {
-            this.style.transition = 'all 0.3s ease';
-        });
-    });
-
-    // Project cards hover effect
+    // Staggered animation for project cards
     const projectCards = document.querySelectorAll('.project-card');
-    projectCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transition = 'all 0.4s ease';
+    projectCards.forEach((card, index) => {
+        card.classList.add('scroll-reveal');
+        card.style.transitionDelay = `${index * 0.15}s`;
+        fadeInObserver.observe(card);
+    });
+
+    // Staggered animation for skill categories
+    const skillCategories = document.querySelectorAll('.skill-category');
+    skillCategories.forEach((category, index) => {
+        category.classList.add('scroll-reveal');
+        category.style.transitionDelay = `${index * 0.1}s`;
+        fadeInObserver.observe(category);
+    });
+
+    // Staggered animation for certification cards
+    const certCards = document.querySelectorAll('.cert-card');
+    certCards.forEach((card, index) => {
+        card.classList.add('scroll-reveal');
+        card.style.transitionDelay = `${index * 0.15}s`;
+        fadeInObserver.observe(card);
+    });
+
+    // Staggered animation for contact items
+    const contactItems = document.querySelectorAll('.contact-item');
+    contactItems.forEach((item, index) => {
+        item.classList.add('scroll-reveal');
+        item.style.transitionDelay = `${index * 0.1}s`;
+        fadeInObserver.observe(item);
+    });
+
+    // Add pulse animation to download button
+    const downloadBtn = document.querySelector('.header-actions .button.primary');
+    if (downloadBtn) {
+        setInterval(() => {
+            downloadBtn.classList.add('animate-pulse');
+            setTimeout(() => {
+                downloadBtn.classList.remove('animate-pulse');
+            }, 2000);
+        }, 10000); // Pulse every 10 seconds
+    }
+
+    // Add hover effect to social icons
+    const socialIcons = document.querySelectorAll('#header nav a');
+    socialIcons.forEach(icon => {
+        icon.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.1)';
+        });
+        icon.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
         });
     });
-});
 
-// Add CSS animation for fade in
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
+    // Parallax effect for background
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const bg = document.getElementById('bg');
+        if (bg) {
+            bg.style.transform = `translateY(${scrolled * 0.5}px)`;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-`;
-document.head.appendChild(style);
+    });
+
+    // Add loading complete class to body
+    setTimeout(() => {
+        document.body.classList.add('loaded');
+    }, 100);
+});
